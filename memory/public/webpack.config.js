@@ -19,6 +19,11 @@ var config = {
                 query: {
                     presets: ["react", "env", "stage-2"]
                 }
+            },
+            
+            { 
+                test: /\.css$/,
+                loader: 'style-loader!css-loader'
             }
         ]
     },

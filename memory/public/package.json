@@ -28,6 +28,8 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-2": "^6.11.0",
+    "css-loader": "^0.28.11",
+    "style-loader": "^0.21.0",
     "webpack": "^1.13.1",
     "webpack-cli": "^3.0.4",
     "webpack-dev-server": "^1.14.1"
