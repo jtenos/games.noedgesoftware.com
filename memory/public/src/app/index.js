@@ -1,10 +1,9 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import jQuery from "jquery";
-import { render } from "react-dom";
+import Button from '@material-ui/core/Button';
 import { Nav } from "./components/nav";
-
-import "bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { SimpleBottomNavigation } from "./components/bottom-nav";
 
 class App extends React.Component {
     
@@ -13,6 +12,10 @@ class App extends React.Component {
             <div>
                 <Nav />
                 <h1>Hello!</h1>
+                <Button variant="contained" color="primary">
+                    Hello World
+                </Button>
+                <SimpleBottomNavigation classes="" />
             </div>
         );
     }
@@ -20,5 +23,5 @@ class App extends React.Component {
 }
 
 jQuery(() => {
-    render(<App />, jQuery("#the-body")[0]);
+    ReactDOM.render(<App />, jQuery("#the-body")[0]);
 });

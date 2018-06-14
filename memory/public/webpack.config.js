@@ -11,7 +11,7 @@ var config = {
         publicPath: "/app/"
     },
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.js?/,
                 include: SRC_DIR,
@@ -31,7 +31,8 @@ var config = {
         port: 3000,
         host: "0.0.0.0",
         disableHostCheck: true
-    }
+    },
+    mode: "development" // production
 };
 
 module.exports = config;
