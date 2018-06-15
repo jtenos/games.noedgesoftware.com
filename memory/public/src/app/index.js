@@ -10,12 +10,11 @@ class App extends React.Component {
     render() {
         return (
             <div>
-                <Nav />
-                <h1>Hello!</h1>
+                <Nav classes={{}} theme={{}} />
                 <Button variant="contained" color="primary">
                     Hello World
                 </Button>
-                <SimpleBottomNavigation classes="" />
+                <SimpleBottomNavigation classes={{}} />
             </div>
         );
     }

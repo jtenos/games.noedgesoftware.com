@@ -1,0 +1,10 @@
+.nav-root {
+    flex-grow: 1;
+}
+.nav-flex {
+    flex: 1;
+}
+.nav-menuButton: {
+    margin-left: -12;
+    margin-right: 20;
+}
