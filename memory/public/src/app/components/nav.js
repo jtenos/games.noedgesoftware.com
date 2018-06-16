@@ -15,11 +15,9 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-
+import Icon from "@material-ui/core/Icon";
 
 import appInfo from "../app-info";
-
-import "./nav.css";
 
 const drawerWidth = 240;
 
@@ -142,11 +140,10 @@ export class Nav extends React.Component {
         </div>
         <Divider />
         <List>
-            <Button children={[]} />
-        </List>
-        <Divider />
-        <List>
-            <Button children={[]} />
+            <Button>
+                <Icon>games</Icon>
+                Play
+            </Button>
         </List>
       </Drawer>
     );
