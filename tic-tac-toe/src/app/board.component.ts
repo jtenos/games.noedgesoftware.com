@@ -1,18 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 const SELECTOR: string = "app-board";
 
 const TEMPLATE: string = `
-<mat-grid-list cols="3" rowHeight="1:1">
-  <mat-grid-tile>1</mat-grid-tile>
-  <mat-grid-tile>2</mat-grid-tile>
-  <mat-grid-tile>3</mat-grid-tile>
-  <mat-grid-tile>4</mat-grid-tile>
-  <mat-grid-tile>5</mat-grid-tile>
-  <mat-grid-tile>6</mat-grid-tile>
-  <mat-grid-tile>7</mat-grid-tile>
-  <mat-grid-tile>8</mat-grid-tile>
-  <mat-grid-tile>9</mat-grid-tile>
+<mat-grid-list cols="{{ dimension }}" rowHeight="1:1" style="margin-top: 10px;">
+  <mat-grid-tile
+    *ngFor="let square of squares; let i = index"
+    [style.border-top]="square.border.top"
+    [style.border-right]="square.border.right"
+    [style.border-bottom]="square.border.bottom"
+    [style.border-left]="square.border.left"
+  >
+    <img
+      [src]="square.imgSrc"
+      style="width: 100%; height: 100%;"
+      (click)="squareClicked(i)"
+    >
+  </mat-grid-tile>
+
 </mat-grid-list>
 `;
 
@@ -21,9 +26,126 @@ const STYLES: string = "";
 @Component({ selector: SELECTOR, template: TEMPLATE, styles: [STYLES] })
 export class BoardComponent implements OnInit {
 
+  private dimension: number;
+
+  private squares;
+  private turn: string;
+  private winner: string;
+
   constructor() { }
 
   ngOnInit() {
+    this.reset(3);
   }
 
+  reset(dimension) {
+    this.dimension = dimension;
+    this.squares = [];
+    this.turn = "X";
+    this.winner = "";
+
+    let numSquares = this.dimension * this.dimension;
+    for (let i = 0; i < numSquares; ++i) {
+      let square = {
+        rowNum: -1,
+        colNum: -1,
+        border: { top: "", right: "", bottom: "", left: "" },
+        value: "",
+        imgSrc: "assets/empty.png"
+      };
+
+      const BORDER_STYLE: string = "2px solid #000";
+      switch (Math.floor(i / this.dimension)) {
+        case 0: square.border.bottom = BORDER_STYLE; break;
+        case this.dimension - 1: square.border.top = BORDER_STYLE; break;
+        default: square.border.bottom = square.border.top = BORDER_STYLE; break;
+      }
+
+      switch (i % this.dimension) {
+        case 0: square.border.right = BORDER_STYLE; break;
+        default:
+          switch ((i + 1) % this.dimension) {
+            case 0: square.border.left = BORDER_STYLE; break;
+            default: square.border.right = square.border.left = BORDER_STYLE; break;
+          }
+      }
+  
+      this.squares.push(square);
+    }
+
+    let idx = 0;
+    for (let row = 0; row < this.dimension; ++row) {
+      for (let col = 0; col < this.dimension; ++col) {
+        let square = this.squares[idx++];
+        square.rowNum = row;
+        square.colNum = col;
+      }
+    }
+  }
+
+  squareClicked(squareNum: number) {
+    let square = this.squares[squareNum];
+    if (square.value) {
+      return;
+    }
+    if (this.winner) {
+      return;
+    }
+
+    square.value = this.turn;
+    square.imgSrc = `assets/${square.value.toLowerCase()}.png`;
+    this.turn = this.turn == "X" ? "O" : "X";
+    this.checkForWinner();
+  }
+
+  checkForWinner() {
+
+    let check = squares => {
+      if (squares.every(x => x.value == "X")) {
+        return this.playerWins("X");
+      } else if (squares.every(x => x.value == "O")) {
+        return this.playerWins("O");
+      }
+    };
+
+    for (let i = 0; i < this.dimension; ++i) {
+      // for each row
+      let result = check(this.squares.filter(x => x.rowNum == i));
+      if (result) {
+        return result;
+      }
+
+      // for each column
+      result = check(this.squares.filter(x => x.colNum == i));
+      if (result) {
+        return result;
+      }
+    }
+
+    // top-left to bottom-right
+    let squares = [];
+    for (let row = 0; row < this.dimension; ++row) {
+      this.squares.filter(x => x.rowNum == row && x.colNum == row).forEach(x => squares.push(x));
+    }
+    let result = check(squares);
+    if (result) {
+      return result;
+    }
+
+    // top right to bottom-left
+    squares = [];
+    for (let row = 0; row < this.dimension; ++row) {
+      this.squares.filter(x => x.rowNum == row && x.colNum == this.dimension - row - 1).forEach(x => squares.push(x));
+    }
+    result = check(squares);
+    if (result) {
+      return result;
+    }
+  }
+
+  playerWins(player: string) {
+    this.winner = player;
+    console.log(`Player ${player} wins!`);
+    return true;
+  }
 }
