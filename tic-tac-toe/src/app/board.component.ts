@@ -3,7 +3,7 @@ import { Component, OnInit, Input } from '@angular/core';
 const SELECTOR: string = "app-board";
 
 const TEMPLATE: string = `
-<mat-grid-list cols="{{ dimension }}" rowHeight="1:1" style="margin-top: 10px;">
+<mat-grid-list cols="{{ dimension }}" rowHeight="1:1" style="max-width: calc(80vh - 56px); margin: 10px auto 0 auto;">
   <mat-grid-tile
     *ngFor="let square of squares; let i = index"
     [style.border-top]="square.border.top"
@@ -19,18 +19,28 @@ const TEMPLATE: string = `
   </mat-grid-tile>
 
 </mat-grid-list>
+
+<img src="assets/x-wins.png" class="result-image" [style.display]="xWinsDisplay" (click)="reset(this.dimension)">
+<img src="assets/o-wins.png" class="result-image" [style.display]="oWinsDisplay" (click)="reset(this.dimension)">
+<img src="assets/tie.png" class="result-image" [style.display]="tieDisplay" (click)="reset(this.dimension)">
 `;
 
-const STYLES: string = "";
+const STYLES: string = `
+  .result-image { position: fixed; left: 0; top: 0; width: 100%; height: 100%; }
+`;
 
 @Component({ selector: SELECTOR, template: TEMPLATE, styles: [STYLES] })
 export class BoardComponent implements OnInit {
 
-  private dimension: number;
+  public dimension: number;
 
-  private squares;
+  public squares;
   private turn: string;
   private winner: string;
+
+  public xWinsDisplay: string = "none";
+  public oWinsDisplay: string = "none";
+  public tieDisplay: string = "";
 
   constructor() { }
 
@@ -43,6 +53,7 @@ export class BoardComponent implements OnInit {
     this.squares = [];
     this.turn = "X";
     this.winner = "";
+    this.xWinsDisplay = this.oWinsDisplay = this.tieDisplay = "none";
 
     let numSquares = this.dimension * this.dimension;
     for (let i = 0; i < numSquares; ++i) {
@@ -141,11 +152,18 @@ export class BoardComponent implements OnInit {
     if (result) {
       return result;
     }
+    
+    // tie
+    if (this.squares.every(x => x.value)) {
+      this.tieDisplay = "block";
+    }
   }
 
   playerWins(player: string) {
     this.winner = player;
     console.log(`Player ${player} wins!`);
+    this[`${player.toLowerCase()}WinsDisplay`] = "block";
+    
     return true;
   }
 }
