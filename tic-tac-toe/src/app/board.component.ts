@@ -3,7 +3,7 @@ import { Component, OnInit, Input } from '@angular/core';
 const SELECTOR: string = "app-board";
 
 const TEMPLATE: string = `
-<mat-grid-list cols="{{ dimension }}" rowHeight="1:1" style="max-width: calc(80vh - 56px); margin: 10px auto 0 auto;">
+<mat-grid-list cols="{{ dimension }}" rowHeight="1:1" style="max-width: calc(100vh - 154px); max-height: calc(100vh); margin: 10px auto 0 auto;">
   <mat-grid-tile
     *ngFor="let square of squares; let i = index"
     [style.border-top]="square.border.top"
