@@ -1,0 +1,17 @@
+cd ../memory/public
+npm run build:prod
+
+cd ../../tic-tac-toe
+npm run build
+
+
+cd ../firebase__dist
+rm --recursive --dir public
+mkdir public
+cd public
+mkdir memory
+cp --recursive ../../memory/public/dist/* ./memory/
+mkdir tic-tac-toe
+cp --recursive ../../tic-tac-toe/dist/tic-tac-toe/* ./tic-tac-toe/
+
+firebase deploy
