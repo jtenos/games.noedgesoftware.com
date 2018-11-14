@@ -112,10 +112,10 @@ export class BoardComponent implements OnInit {
   checkForWinner() {
 
     let check = squares => {
-      if (squares.every(x => x.value == "X")) {
-        return this.playerWins("X");
-      } else if (squares.every(x => x.value == "O")) {
-        return this.playerWins("O");
+      for (let i = 0; i < squares.length - 2; ++i) {
+        if (squares[i].value && (squares[i].value == squares[i + 1].value) && (squares[i].value == squares[i + 2].value)) {
+          return this.playerWins(squares[i].value);
+        }
       }
     };
 
@@ -133,26 +133,30 @@ export class BoardComponent implements OnInit {
       }
     }
 
-    // top-left to bottom-right
-    let squares = [];
-    for (let row = 0; row < this.dimension; ++row) {
-      this.squares.filter(x => x.rowNum == row && x.colNum == row).forEach(x => squares.push(x));
-    }
-    let result = check(squares);
-    if (result) {
-      return result;
-    }
+    this.squares.forEach(square => {
+      var result;
+      // From each square, go down/right twice and down/left twice
+      let squares = [square];
+      squares.push(this.squares.filter(x => x.rowNum == square.rowNum + 1 && x.colNum == square.colNum + 1)[0]);
+      squares.push(this.squares.filter(x => x.rowNum == square.rowNum + 2 && x.colNum == square.colNum + 2)[0]);
+      if (squares[0] && squares[1] && squares[2]) {
+        result = check(squares);
+        if (result) {
+          return result;
+        }
+      }
 
-    // top right to bottom-left
-    squares = [];
-    for (let row = 0; row < this.dimension; ++row) {
-      this.squares.filter(x => x.rowNum == row && x.colNum == this.dimension - row - 1).forEach(x => squares.push(x));
-    }
-    result = check(squares);
-    if (result) {
-      return result;
-    }
-    
+      squares = [square];
+      squares.push(this.squares.filter(x => x.rowNum == square.rowNum + 1 && x.colNum == square.colNum - 1)[0]);
+      squares.push(this.squares.filter(x => x.rowNum == square.rowNum + 2 && x.colNum == square.colNum - 2)[0]);
+      if (squares[0] && squares[1] && squares[2]) {
+        result = check(squares);
+        if (result) {
+          return result;
+        }
+      }
+    });
+
     // tie
     if (this.squares.every(x => x.value)) {
       this.tieDisplay = "block";

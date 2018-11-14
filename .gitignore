@@ -3,4 +3,7 @@
 **/node_modules/
 **/npm-debug.log
 **/package-lock.json
-firebase__dist/public
+firebase__dist
+.firebaserc
+firebase.json
+.firebase/
